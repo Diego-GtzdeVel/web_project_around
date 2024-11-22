@@ -1,0 +1,9 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  max-width: 880px;
+  max-height: 913px;
+  justify-content: center;
+  align-items: center;
+  font-family: "Inter", Arial, sans-serif;
+}

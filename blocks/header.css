@@ -1,0 +1,11 @@
+.header {
+  display: flex;
+  width: 880px;
+  height: 74px;
+  border-bottom: solid 1px #545454;
+  margin-top: 45px;
+}
+
+.header__logo {
+  margin-bottom: 41px;
+}
