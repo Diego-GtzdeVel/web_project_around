@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Página Around The US" />
+    <meta name="description" content="Alrededor de los EE.UU." />
     <meta name="author" content="Diego Gutierrez de Velasco Lujan" />
     <meta name="keywords" content="galeria" />
     <title>Around The US</title>
@@ -20,7 +20,34 @@
         />
       </header>
       <main class="content">
-        <section class="profile"></section>
+        <section class="profile">
+          <img
+            class="profile__avatar"
+            src="./images/avatar.png"
+            alt="Something's wrong"
+          />
+          <div class="profile__info">
+            <h1 class="profile__name">
+              Jacques Cousteau
+              <span
+                ><button
+                  class="profile__edit"
+                  href="#"
+                  type="button"
+                  name="edit"
+                >
+                  <img
+                    src="./images/editbutton.png"
+                    alt="Edit Button"
+                  /></button
+              ></span>
+            </h1>
+            <p class="profile__description">Explorador</p>
+          </div>
+          <button class="profile__add" type="button" name="edit">
+            <img src="./images/addbutton.png" alt="Add Button" />
+          </button>
+        </section>
         <section class="cards">
           <div class="card">
             <img
@@ -129,6 +156,34 @@
                 <span class="card__description-checkbox-icon"></span>
               </label>
             </div>
+          </div>
+        </section>
+        <section class="popup">
+          <button class="popup__close" type="button" name="close">
+            <img src="./images/closeicon.png" alt="Close Button" />
+          </button>
+          <div class="popup__container">
+            <h2 class="popup__title">Editar perfil</h2>
+          <form class="form popup__form">
+            <fieldset class="form__fieldset">
+              <input
+                type="text"
+                id="name"
+                class="form__input"
+                placeholder="Nombre"
+                required
+              />
+              <input
+                type="text"
+                id="about"
+                class="form__input"
+                placeholder="Acera de mí"
+                required
+              />
+              <button type="submit" class="form__button">
+                Guardar
+              </button>
+            </fieldset>
           </div>
         </section>
       </main>
