@@ -7,7 +7,6 @@
     <meta name="author" content="Diego Gutierrez de Velasco Lujan" />
     <meta name="keywords" content="galeria" />
     <title>Around The US</title>
-    <link rel="shortcut icon" href="#" />
     <link rel="stylesheet" href="./pages/index.css" />
   </head>
   <body>
@@ -30,12 +29,7 @@
             <h1 class="profile__name">
               Jacques Cousteau
               <span
-                ><button
-                  class="profile__edit"
-                  href="#"
-                  type="button"
-                  name="edit"
-                >
+                ><button class="profile__edit" type="button" name="edit">
                   <img
                     src="./images/editbutton.png"
                     alt="Edit Button"
@@ -164,24 +158,23 @@
           </button>
           <div class="popup__container">
             <h2 class="popup__title">Editar perfil</h2>
-          <form class="form popup__form">
-            <fieldset class="form__fieldset">
-              <input
-                type="text"
-                id="name"
-                class="form__input form__input-name"
-                placeholder="Nombre"
-              />
-              <input
-                type="text"
-                id="about"
-                class="form__input form__input-about"
-                placeholder="Acera de mí"
-              />
-              <button type="submit" class="form__button">
-                Guardar
-              </button>
-            </fieldset>
+            <form class="form popup__form">
+              <fieldset class="form__fieldset">
+                <input
+                  type="text"
+                  id="name"
+                  class="form__input form__input-name"
+                  placeholder="Name"
+                />
+                <input
+                  type="text"
+                  id="about"
+                  class="form__input form__input-about"
+                  placeholder="About Me"
+                />
+                <button type="submit" class="form__button">Save</button>
+              </fieldset>
+            </form>
           </div>
         </section>
       </main>
