@@ -11,3 +11,22 @@
   max-height: 33px;
   margin-bottom: 41px;
 }
+
+@media screen and (max-width: 1024px) {
+  .header {
+    max-width: 528px;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .header {
+    max-width: 100%;
+    margin-top: 28px;
+  }
+
+  .header__logo {
+    max-width: 126px;
+    max-height: 24px;
+    margin-left: 20px;
+  }
+}

@@ -6,7 +6,7 @@
   column-gap: 17px;
   row-gap: 21px;
   max-width: 880px;
-  max-height: 743px;
+  max-height: 100%;
   margin-top: 50px;
 }
 
@@ -36,9 +36,6 @@
   line-height: 1.2;
   margin-top: 25px;
   position: relative;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
 }
 
 .card__description-checkbox {
@@ -48,6 +45,9 @@
 .card__description-text {
   display: flex;
   align-items: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .card__description-checkbox-icon {
@@ -62,4 +62,21 @@
 
 .card__description-checkbox-icon:hover {
   opacity: 50%;
+}
+
+@media screen and (max-width: 1024px) {
+  .cards {
+    max-width: 528px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .cards {
+    max-width: 282px;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    margin-top: 166px;
+  }
 }
