@@ -43,114 +43,18 @@
           </button>
         </section>
         <section class="cards">
-          <div class="card">
-            <img
-              class="card__image"
-              src="./images/yosemite.png"
-              alt="Valle de Yosemite"
-            />
-            <div class="card__description">
-              <input
-                type="checkbox"
-                id="like"
-                class="card__description-checkbox"
-              />
-              <label class="card__description-text" for="like">
-                Valle de Yosemite
-                <span class="card__description-checkbox-icon"></span>
-              </label>
+          <template id="card__template">
+            <div class="card">
+              <img class="card__image" src="" alt="" />
+              <img class="card__delete" src="./images/trash.svg" alt="Delete" />
+              <div class="card__description">
+                <input type="checkbox" class="card__description-checkbox" />
+                <label class="card__description-text" for="">
+                  <span class="card__description-checkbox-icon"></span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div class="card">
-            <img
-              class="card__image"
-              src="./images/louise.png"
-              alt="Valle de Yosemite"
-            />
-            <div class="card__description">
-              <input
-                type="checkbox"
-                id="like"
-                class="card__description-checkbox"
-              />
-              <label class="card__description-text" for="like">
-                Lago Louise
-                <span class="card__description-checkbox-icon"></span>
-              </label>
-            </div>
-          </div>
-          <div class="card">
-            <img
-              class="card__image"
-              src="./images/mountain.png"
-              alt="Valle de Yosemite"
-            />
-            <div class="card__description">
-              <input
-                type="checkbox"
-                id="like"
-                class="card__description-checkbox"
-              />
-              <label class="card__description-text" for="like">
-                Montañas Calvas
-                <span class="card__description-checkbox-icon"></span>
-              </label>
-            </div>
-          </div>
-          <div class="card">
-            <img
-              class="card__image"
-              src="./images/latemar.png"
-              alt="Valle de Yosemite"
-            />
-            <div class="card__description">
-              <input
-                type="checkbox"
-                id="like"
-                class="card__description-checkbox"
-              />
-              <label class="card__description-text" for="like">
-                Latemar
-                <span class="card__description-checkbox-icon"></span>
-              </label>
-            </div>
-          </div>
-          <div class="card">
-            <img
-              class="card__image"
-              src="./images/vanois.png"
-              alt="Valle de Yosemite"
-            />
-            <div class="card__description">
-              <input
-                type="checkbox"
-                id="like"
-                class="card__description-checkbox"
-              />
-              <label class="card__description-text" for="like">
-                Vanoise National Park
-                <span class="card__description-checkbox-icon"></span>
-              </label>
-            </div>
-          </div>
-          <div class="card">
-            <img
-              class="card__image"
-              src="./images/braies.png"
-              alt="Valle de Yosemite"
-            />
-            <div class="card__description">
-              <input
-                type="checkbox"
-                id="like"
-                class="card__description-checkbox"
-              />
-              <label class="card__description-text" for="like">
-                Lago di Braies
-                <span class="card__description-checkbox-icon"></span>
-              </label>
-            </div>
-          </div>
+          </template>
         </section>
         <section class="popup">
           <button class="popup__close" type="button" name="close">
