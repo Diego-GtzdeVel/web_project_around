@@ -1,0 +1,132 @@
+.add-popup {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 1280px;
+  height: 1280px;
+  position: absolute;
+  background: rgb(0, 0, 0, 0.5);
+}
+
+.add-popup_opened {
+  display: flex;
+}
+
+.add-popup__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  width: 430px;
+  height: 330px;
+  border-radius: 10px;
+  position: absolute;
+  top: 195px;
+}
+
+.add-popup__close {
+  display: flex;
+  background: rgba(0, 0, 0);
+  border: 0;
+  cursor: pointer;
+  max-width: 40px;
+  max-height: 40px;
+  position: absolute;
+  top: 146.72px;
+  right: 376.72px;
+}
+
+.add-popup__close:hover {
+  opacity: 50%;
+}
+
+.add-popup__title {
+  color: black;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1.2;
+  width: 330px;
+  margin-top: 34px;
+  margin-right: 24px;
+}
+
+.add-form__fieldset {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-width: 0;
+  margin-top: 34px;
+}
+
+.add-form__input {
+  box-sizing: border-box;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 1.2;
+  width: 358px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  outline: none;
+  margin-bottom: 30px;
+}
+
+.add-form__button {
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 1.2;
+  width: 358px;
+  height: 50px;
+  background-color: black;
+  color: #ffffff;
+  border-radius: 2px;
+  border: none;
+  margin-top: 18px;
+  margin-bottom: 36.5px;
+}
+
+.add-form__button:hover {
+  opacity: 80%;
+}
+
+@media screen and (max-width: 1024px) {
+  .add-popup {
+    width: 1024px;
+    height: 1400px;
+    top: 0;
+  }
+
+  .add-popup__close {
+    right: 236.72px;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .add-popup {
+    width: 544px;
+    height: 1640px;
+  }
+
+  .add-popup__container {
+    max-width: 282px;
+    max-height: 322px;
+  }
+
+  .add-popup__title {
+    max-width: 238px;
+    font: 18px;
+  }
+
+  .add-popup__close {
+    right: 136.72px;
+  }
+
+  .add-form__input {
+    max-width: 232px;
+  }
+
+  .add-form__button {
+    max-width: 238px;
+  }
+}

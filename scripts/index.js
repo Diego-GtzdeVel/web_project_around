@@ -56,16 +56,14 @@ const initialCards = [
   },
 ];
 
-// Function to load all cards into the page using the template
 function loadCards() {
   const cardsSection = document.querySelector(".cards");
-  const cardTemplate = document.getElementById("card__template"); // Get the template
+  const cardTemplate = document.getElementById("card__template");
 
   initialCards.forEach((card) => {
-    const cardClone = cardTemplate.content.cloneNode(true); // Clone the template content
+    const cardClone = cardTemplate.content.cloneNode(true);
     console.log(cardClone);
 
-    // Get the elements inside the template
     const cardImage = cardClone.querySelector(".card__image");
     const cardDelete = cardClone.querySelector(".card__delete");
     const cardCheckbox = cardClone.querySelector(".card__description-checkbox");
@@ -75,7 +73,6 @@ function loadCards() {
     );
     console.log(cardLike);
 
-    // Set the values for the cloned elements
     cardImage.src = card.link;
     cardImage.alt = card.name;
     cardCheckbox.id = card.name;
@@ -83,9 +80,24 @@ function loadCards() {
     cardLabel.textContent = card.name;
     cardLabel.appendChild(cardLike);
 
-    // Append the cloned card to the cards section
     cardsSection.appendChild(cardClone);
   });
 }
 
 loadCards();
+
+const addPopup = document.querySelector(".add-popup");
+const addPopupForm = document.querySelector(".add-popup__form");
+const addButton = document.querySelector(".profile__add");
+const closeAddButton = document.querySelector(".add-popup__close");
+
+function openAddPopup() {
+  addPopup.classList.add("add-popup_opened");
+}
+
+function closeAddPopup() {
+  addPopup.classList.remove("add-popup_opened");
+}
+
+addButton.addEventListener("click", openAddPopup);
+closeAddButton.addEventListener("click", closeAddPopup);
