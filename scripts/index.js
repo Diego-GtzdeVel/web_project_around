@@ -20,7 +20,7 @@ function closePopup() {
 function handleFormSubmit(evt) {
   evt.preventDefault();
 
-  profileName.firstChild.textContent = nameInput.value;
+  profileName.textContent = nameInput.value;
   profileDescription.textContent = aboutInput.value;
   closePopup();
 }
@@ -56,35 +56,49 @@ const initialCards = [
   },
 ];
 
+const cardsContainer = document.querySelector(".cards");
+const cardTemplate = document.getElementById("card__template");
+
+function createCard(cardData) {
+  const cardClone = cardTemplate.content.cloneNode(true);
+
+  const cardImage = cardClone.querySelector(".card__image");
+  const cardCheckbox = cardClone.querySelector(".card__description-checkbox");
+  const cardLabel = cardClone.querySelector(".card__description-text");
+  const cardLike = cardClone.querySelector(".card__description-checkbox-icon");
+
+  cardImage.src = cardData.link;
+  cardImage.alt = cardData.name;
+  cardCheckbox.id = cardData.name;
+  cardLabel.setAttribute("for", cardData.name);
+  cardLabel.textContent = cardData.name;
+  cardLabel.appendChild(cardLike);
+
+  return cardClone;
+}
+
 function loadCards() {
-  const cardsSection = document.querySelector(".cards");
-  const cardTemplate = document.getElementById("card__template");
-
   initialCards.forEach((card) => {
-    const cardClone = cardTemplate.content.cloneNode(true);
-    console.log(cardClone);
-
-    const cardImage = cardClone.querySelector(".card__image");
-    const cardDelete = cardClone.querySelector(".card__delete");
-    const cardCheckbox = cardClone.querySelector(".card__description-checkbox");
-    const cardLabel = cardClone.querySelector(".card__description-text");
-    const cardLike = cardClone.querySelector(
-      ".card__description-checkbox-icon"
-    );
-    console.log(cardLike);
-
-    cardImage.src = card.link;
-    cardImage.alt = card.name;
-    cardCheckbox.id = card.name;
-    cardLabel.setAttribute("for", card.name);
-    cardLabel.textContent = card.name;
-    cardLabel.appendChild(cardLike);
-
-    cardsSection.appendChild(cardClone);
+    const cardElement = createCard(card);
+    cardsContainer.appendChild(cardElement);
   });
 }
 
 loadCards();
+
+function initializeCardDeletion() {
+  cardsContainer.addEventListener("click", (event) => {
+    if (event.target.classList.contains("card__delete")) {
+      const card = event.target.closest(".card");
+      if (card) {
+        card.remove();
+        console.log("Tarjeta eliminada:", card);
+      }
+    }
+  });
+}
+
+initializeCardDeletion();
 
 const addPopup = document.querySelector(".add-popup");
 const addPopupForm = document.querySelector(".add-popup__form");
@@ -101,3 +115,16 @@ function closeAddPopup() {
 
 addButton.addEventListener("click", openAddPopup);
 closeAddButton.addEventListener("click", closeAddPopup);
+
+addPopupForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const titleInput = document.querySelector("#title").value.trim();
+  const linkInput = document.querySelector("#link").value.trim();
+
+  if (titleInput && linkInput) {
+    const newCard = createCard({ name: titleInput, link: linkInput });
+    cardsContainer.prepend(newCard);
+    closeAddPopup();
+  }
+});
