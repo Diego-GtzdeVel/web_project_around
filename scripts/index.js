@@ -31,28 +31,28 @@ popupForm.addEventListener("submit", handleFormSubmit);
 
 const initialCards = [
   {
-    name: "Valle de Yosemite",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/yosemite.jpg",
+    name: "Andermatt",
+    link: "https://images.unsplash.com/photo-1575742112216-64b49e73a170?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
-    name: "Lago Louise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/lake-louise.jpg",
+    name: "Sequoia Park",
+    link: "https://images.unsplash.com/photo-1709943517404-635ada23e41d?q=80&w=2952&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
-    name: "Montañas Calvas",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/bald-mountains.jpg",
+    name: "Petra",
+    link: "https://images.unsplash.com/photo-1705628078563-966777473473?q=80&w=2938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
-    name: "Latemar",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/latemar.jpg",
+    name: "Zhangjiajie",
+    link: "https://images.unsplash.com/photo-1567266565446-d9c40ccf59a4?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
-    name: "Parque Nacional de la Vanoise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/vanoise.jpg",
+    name: "Amalfi Coast",
+    link: "https://images.unsplash.com/photo-1533656338503-b22f63e96cd8?q=80&w=2873&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
-    name: "Lago di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/lago.jpg",
+    name: "Santorini",
+    link: "https://images.unsplash.com/photo-1678266561093-324802646fb2?q=80&w=2835&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ];
 
@@ -92,7 +92,6 @@ function initializeCardDeletion() {
       const card = event.target.closest(".card");
       if (card) {
         card.remove();
-        console.log("Tarjeta eliminada:", card);
       }
     }
   });
@@ -126,5 +125,49 @@ addPopupForm.addEventListener("submit", (event) => {
     const newCard = createCard({ name: titleInput, link: linkInput });
     cardsContainer.prepend(newCard);
     closeAddPopup();
+  }
+});
+
+const imagePopupTemplate = document.querySelector("#image__popup");
+let activePopup = null;
+
+function createImagePopup(card) {
+  const popupClone = imagePopupTemplate.content.cloneNode(true);
+  const popupElement = popupClone.querySelector(".image-popup");
+
+  const imagePopupImage = popupClone.querySelector(".image-popup__image");
+  const imagePopupDescription = popupClone.querySelector(
+    ".image-popup__description"
+  );
+  const imagePopupClose = popupClone.querySelector(".image-popup__close");
+
+  const cardImage = card.querySelector(".card__image");
+  const cardName = card.querySelector(".card__description-text").textContent;
+
+  imagePopupImage.src = cardImage.src;
+  imagePopupImage.alt = cardName;
+  imagePopupDescription.textContent = cardName;
+
+  imagePopupClose.addEventListener("click", () =>
+    closeImagePopup(popupElement)
+  );
+
+  document.body.appendChild(popupElement);
+
+  activePopup = popupElement;
+
+  popupElement.classList.add("image-popup_opened");
+}
+
+function closeImagePopup(popupElement) {
+  popupElement.classList.remove("image-popup_opened");
+  popupElement.remove();
+  activePopup = null;
+}
+
+cardsContainer.addEventListener("click", (event) => {
+  if (event.target.classList.contains("card__image")) {
+    const card = event.target.closest(".card");
+    createImagePopup(card);
   }
 });
