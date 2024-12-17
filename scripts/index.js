@@ -25,9 +25,24 @@ function handleFormSubmit(evt) {
   closePopup();
 }
 
+function handleOutsideClick(evt, popupElement) {
+  if (evt.target === popupElement) {
+    closePopup(popupElement);
+  }
+}
+
+function popupEscClose(evt) {
+  if (evt.key === "Escape") {
+    closePopup();
+  }
+}
+
 editButton.addEventListener("click", openPopup);
 closeButton.addEventListener("click", closePopup);
 popupForm.addEventListener("submit", handleFormSubmit);
+popup.addEventListener("click", (evt) => handleOutsideClick(evt, popup));
+
+document.addEventListener("keydown", popupEscClose);
 
 const initialCards = [
   {
@@ -112,8 +127,25 @@ function closeAddPopup() {
   addPopup.classList.remove("add-popup_opened");
 }
 
+function handleOutsideAddClick(evt, popupElement) {
+  if (evt.target === popupElement) {
+    closeAddPopup(popupElement);
+  }
+}
+
+function addEscClose(evt) {
+  if (evt.key === "Escape") {
+    closeAddPopup();
+  }
+}
+
 addButton.addEventListener("click", openAddPopup);
 closeAddButton.addEventListener("click", closeAddPopup);
+addPopup.addEventListener("click", (evt) =>
+  handleOutsideAddClick(evt, addPopup)
+);
+
+document.addEventListener("keydown", addEscClose);
 
 addPopupForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -152,6 +184,14 @@ function createImagePopup(card) {
     closeImagePopup(popupElement)
   );
 
+  popupElement.addEventListener("click", (event) => {
+    if (event.target === popupElement) {
+      closeImagePopup(popupElement);
+    }
+  });
+
+  document.addEventListener("keydown", handleEscClose);
+
   document.body.appendChild(popupElement);
 
   activePopup = popupElement;
@@ -163,6 +203,12 @@ function closeImagePopup(popupElement) {
   popupElement.classList.remove("image-popup_opened");
   popupElement.remove();
   activePopup = null;
+}
+
+function handleEscClose(evt) {
+  if (evt.key === "Escape" && activePopup) {
+    closeImagePopup(activePopup);
+  }
 }
 
 cardsContainer.addEventListener("click", (event) => {
