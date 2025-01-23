@@ -1,5 +1,5 @@
-import Card from "./Card.js";
-import FormValidator from "./FormValidator.js";
+import Card from "../components/Card.js";
+import FormValidator from "../components/FormValidator.js";
 import {
   openPopup,
   closePopup,
@@ -8,7 +8,7 @@ import {
   handleEscClose,
   createImagePopup,
   handleImagePopupEscClose,
-} from "./utils.js";
+} from "../scripts/utils.js";
 
 const popup = document.querySelector(".popup");
 const popupForm = document.querySelector(".popup__form");
