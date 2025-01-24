@@ -110,6 +110,7 @@ function closeAddPopup() {
 
 addButton.addEventListener("click", openAddPopup);
 closeAddButton.addEventListener("click", closeAddPopup);
+
 addPopupForm.addEventListener("submit", (event) => {
   event.preventDefault();
 

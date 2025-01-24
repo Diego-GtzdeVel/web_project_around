@@ -5,8 +5,8 @@
   grid-template-rows: repeat(2, 1fr);
   column-gap: 17px;
   row-gap: 21px;
-  max-width: 880px;
-  max-height: 100%;
+  width: 880px;
+  height: 100%;
   margin-top: 50px;
 }
 
