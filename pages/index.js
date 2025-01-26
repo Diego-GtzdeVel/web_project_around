@@ -1,32 +1,25 @@
 import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
-import {
-  openPopup,
-  closePopup,
-  handleFormSubmit,
-  handleOutsideClick,
-  handleEscClose,
-  createImagePopup,
-  handleImagePopupEscClose,
-} from "../scripts/utils.js";
+import Section from "../components/Section.js";
+import PopupWithImage from "../components/PopupWithImage.js";
+import PopupWithForm from "../components/PopupWithForm.js";
+import UserInfo from "../components/UserInfo.js";
 
-const popup = document.querySelector(".popup");
-const popupForm = document.querySelector(".popup__form");
-const nameInput = document.querySelector("#name");
-const aboutInput = document.querySelector("#about");
-const profileName = document.querySelector(".profile__name");
-const profileDescription = document.querySelector(".profile__description");
+const popupEditProfileSelector = ".popup";
+const popupAddCardSelector = ".add-popup";
+const popupImageSelector = ".image-popup";
+
 const editButton = document.querySelector(".profile__edit");
-const closeButton = document.querySelector(".popup__close");
-
-const addPopup = document.querySelector(".add-popup");
-const addPopupForm = document.querySelector(".add-popup__form");
 const addButton = document.querySelector(".profile__add");
-const closeAddButton = document.querySelector(".add-popup__close");
 
-const imagePopupTemplate = document.querySelector("#image__popup");
-let activePopup = null;
-let imagePopup = null;
+const formConfig = {
+  formSelector: ".form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
 
 const initialCards = [
   {
@@ -55,87 +48,72 @@ const initialCards = [
   },
 ];
 
-const cardsContainer = document.querySelector(".cards");
-const cardTemplate = document.getElementById("card__template");
-
-function loadCards() {
-  initialCards.forEach((card) => {
-    const cardInstance = new Card(card, "#card__template");
-    cardsContainer.appendChild(cardInstance.getCard());
-  });
-}
-
-loadCards();
-
-editButton.addEventListener("click", () =>
-  openPopup(popup, nameInput, aboutInput, profileName, profileDescription)
-);
-closeButton.addEventListener("click", () => closePopup(popup));
-
-popupForm.addEventListener("submit", (evt) =>
-  handleFormSubmit(
-    evt,
-    nameInput,
-    aboutInput,
-    profileName,
-    profileDescription,
-    popup
-  )
-);
-
-const formConfig = {
-  formSelector: ".form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  inactiveButtonClass: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__error_visible",
-};
-
-const formElements = Array.from(
-  document.querySelectorAll(formConfig.formSelector)
-);
-formElements.forEach((formElement) => {
-  const formValidator = new FormValidator(formElement, formConfig);
-  formValidator.enableValidation();
+const userInfo = new UserInfo({
+  nameSelector: ".profile__name",
+  jobSelector: ".profile__description",
 });
 
-function openAddPopup() {
-  addPopup.classList.add("add-popup_opened");
-}
+const cardsSection = new Section(
+  {
+    items: initialCards,
+    renderer: (cardData) => {
+      const card = new Card(cardData, "#card__template");
+      cardsSection.addItem(card.getCard());
+    },
+  },
+  ".cards"
+);
 
-function closeAddPopup() {
-  addPopup.classList.remove("add-popup_opened");
-}
+cardsSection.renderItems();
 
-addButton.addEventListener("click", openAddPopup);
-closeAddButton.addEventListener("click", closeAddPopup);
+const editProfileValidator = new FormValidator(editProfileform, formConfig);
+editProfileValidator.enableValidation();
 
-addPopupForm.addEventListener("submit", (event) => {
-  event.preventDefault();
+const addCardValidator = new FormValidator(addCardForm, formConfig);
+addCardValidator.enableValidation();
 
-  const titleInput = document.querySelector("#title").value.trim();
-  const linkInput = document.querySelector("#link").value.trim();
-
-  if (titleInput && linkInput) {
-    const newCard = new Card(
-      { name: titleInput, link: linkInput },
-      "#card__template"
-    );
-    cardsContainer.prepend(newCard.getCard());
-    closeAddPopup();
+const profilePopup = new PopupWithForm(
+  popupEditProfileSelector,
+  (inputValues) => {
+    userInfo.setUserInfo({ name: inputValues.name, job: inputValues.about });
   }
+);
+profilePopup.setEventListeners();
+
+const addCardPopup = new PopupWithForm(popupAddCardSelector, (inputValues) => {
+  const newCard = new Card(
+    { name: inputValues.title, link: inputValues.link },
+    "#card__template"
+  );
+  cardsSection.addItem(newCard.getCard());
+});
+addCardPopup.setEventListeners();
+
+const imagePopup = new PopupWithImage(
+  popupImageSelector,
+  document.querySelector("#image-popup-template")
+);
+imagePopup.setEventListeners();
+
+editButton.addEventListener("click", () => {
+  const userData = userInfo.getUserInfo();
+  document.querySelector("#name").value = userData.name;
+  document.querySelector("#about").value = userData.job;
+  profilePopup.open();
 });
 
-cardsContainer.addEventListener("click", (event) => {
+addButton.addEventListener("click", () => {
+  addCardPopup.open();
+});
+
+document.querySelector(".cards").addEventListener("click", (event) => {
   if (event.target.classList.contains("card__image")) {
-    const card = event.target.closest(".card");
-    createImagePopup(card, imagePopupTemplate);
+    const cardElement = event.target.closest(".card");
+    const cardImage = cardElement.querySelector(".card__image");
+    const cardTitle = cardElement.querySelector(
+      ".card__description-text"
+    ).textContent;
+
+    imagePopup.open(cardImage.src, cardImage.alt, cardTitle);
   }
 });
-
-document.addEventListener("keydown", (evt) => handleEscClose(evt, popup));
-document.addEventListener("keydown", (evt) => handleEscClose(evt, addPopup));
-document.addEventListener("keydown", (evt) =>
-  handleImagePopupEscClose(evt, imagePopup)
-);

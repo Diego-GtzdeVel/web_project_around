@@ -28,6 +28,13 @@ export default class Card {
     return cardClone;
   }
 
+  handleCardClick(callback) {
+    const cardImage = this.cardElement.querySelector(".card__image");
+    cardImage.addEventListener("click", () => {
+      callback(this.cardData.link, this.cardData.name);
+    });
+  }
+
   _handleDelete = (event) => {
     const card = event.target.closest(".card");
     if (card) {
