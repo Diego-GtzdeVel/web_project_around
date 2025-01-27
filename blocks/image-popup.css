@@ -11,7 +11,7 @@
   align-items: center;
 }
 
-.image-popup_opened {
+.popup_opened {
   display: flex;
 }
 
@@ -43,9 +43,7 @@
   cursor: pointer;
   max-width: 40px;
   max-height: 40px;
-  position: absolute;
-  top: -15px;
-  right: -15px;
+  position: relative;
 }
 
 .image-popup__close:hover {
