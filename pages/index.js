@@ -5,7 +5,6 @@ import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
 
-// Selectors and Configuration
 const popupEditProfileSelector = ".popup";
 const popupAddCardSelector = ".add-popup";
 const popupImageSelector = ".image-popup";
@@ -24,7 +23,6 @@ const formConfig = {
   errorClass: "popup__error_visible",
 };
 
-// Initial Cards
 const initialCards = [
   {
     name: "Andermatt",
@@ -52,13 +50,11 @@ const initialCards = [
   },
 ];
 
-// User Info
 const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   jobSelector: ".profile__description",
 });
 
-// Section for Cards
 const cardsSection = new Section(
   {
     items: initialCards,
@@ -71,7 +67,6 @@ const cardsSection = new Section(
 );
 cardsSection.renderItems();
 
-// Popup Handling
 const profilePopup = new PopupWithForm(
   popupEditProfileSelector,
   (inputValues) => {
@@ -90,8 +85,8 @@ const addCardPopup = new PopupWithForm(popupAddCardSelector, (inputValues) => {
 addCardPopup.setEventListeners();
 
 const imagePopup = new PopupWithImage(popupImageSelector);
+imagePopup.setEventListeners();
 
-// Event Listeners
 editButton.addEventListener("click", () => {
   const userData = userInfo.getUserInfo();
   document.querySelector("#name").value = userData.name.trim();
@@ -115,14 +110,12 @@ document.querySelector(".cards").addEventListener("click", (event) => {
   }
 });
 
-// Form Validators
 const editProfileValidator = new FormValidator(editProfileForm, formConfig);
 editProfileValidator.enableValidation();
 
 const addCardValidator = new FormValidator(addCardForm, formConfig);
 addCardValidator.enableValidation();
 
-// Helper Functions
 function createCard(data) {
   const card = new Card(data, "#card__template");
   return card.getCard();

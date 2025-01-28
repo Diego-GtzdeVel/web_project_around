@@ -37,13 +37,14 @@
 
 .image-popup__close {
   display: flex;
-  align-self: flex-end;
+  align-self: center;
   background: rgba(0, 0, 0, 0.1);
   border: 0;
   cursor: pointer;
   max-width: 40px;
   max-height: 40px;
   position: relative;
+  left: 300px;
 }
 
 .image-popup__close:hover {
