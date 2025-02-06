@@ -4,6 +4,7 @@ import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import UserInfo from "../components/UserInfo.js";
+import Api from "../components/Api.js";
 
 const popupEditProfileSelector = ".popup";
 const popupAddCardSelector = ".add-popup";
@@ -120,3 +121,25 @@ function createCard(data) {
   const card = new Card(data, "#card__template");
   return card.getCard();
 }
+
+const api = new Api("https://around-api.es.tripleten-services.com/v1/", {
+  Authorization: "1439adc7-0960-4dee-903b-22e0b673f7cc",
+});
+
+// Llamada para obtener la información del usuario
+api.getUserInfo().then((result) => {
+  if (result.success === false) {
+    console.error("Error al obtener la información del usuario:", result.error);
+  } else {
+    console.log("Información del usuario:", result);
+  }
+});
+
+// Llamada para obtener las tarjetas iniciales
+api.getInitialCards().then((result) => {
+  if (result.success === false) {
+    console.error("Error al obtener las tarjetas iniciales:", result.error);
+  } else {
+    console.log("Tarjetas iniciales:", result);
+  }
+});

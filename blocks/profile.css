@@ -7,11 +7,20 @@
 }
 .profile__info {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   width: 415px;
   height: 77px;
   margin-left: 30px;
+}
+
+.profile__avatar {
+  max-width: 120px;
+  max-height: 120px;
+}
+
+.profile__avatar-edit {
 }
 
 .profile__name {
@@ -36,6 +45,9 @@
   cursor: pointer;
   max-width: 24px;
   max-height: 24px;
+  position: relative;
+  top: 10px;
+  right: -10px;
 }
 
 .profile__add {
@@ -54,6 +66,9 @@
 
 .profile__add:hover {
   opacity: 60%;
+}
+
+.profile__avatar:hover {
 }
 
 @media screen and (max-width: 1024px) {
