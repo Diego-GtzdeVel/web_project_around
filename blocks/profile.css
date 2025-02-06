@@ -7,8 +7,7 @@
 }
 .profile__info {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: flex-start;
   width: 415px;
   height: 77px;
@@ -16,8 +15,10 @@
 }
 
 .profile__avatar {
-  max-width: 120px;
-  max-height: 120px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .profile__avatar-edit {
@@ -45,9 +46,10 @@
   cursor: pointer;
   max-width: 24px;
   max-height: 24px;
+  align-self: flex-start;
   position: relative;
-  top: 10px;
-  right: -10px;
+  top: 35px;
+  right: 30px;
 }
 
 .profile__add {

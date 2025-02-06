@@ -24,70 +24,126 @@ const formConfig = {
   errorClass: "popup__error_visible",
 };
 
-const initialCards = [
-  {
-    name: "Andermatt",
-    link: "https://images.unsplash.com/photo-1575742112216-64b49e73a170?q=80",
-  },
-  {
-    name: "Sequoia Park",
-    link: "https://images.unsplash.com/photo-1709943517404-635ada23e41d?q=80",
-  },
-  {
-    name: "Petra",
-    link: "https://images.unsplash.com/photo-1705628078563-966777473473?q=80",
-  },
-  {
-    name: "Zhangjiajie",
-    link: "https://images.unsplash.com/photo-1567266565446-d9c40ccf59a4?q=80",
-  },
-  {
-    name: "Amalfi Coast",
-    link: "https://images.unsplash.com/photo-1533656338503-b22f63e96cd8?q=80",
-  },
-  {
-    name: "Santorini",
-    link: "https://images.unsplash.com/photo-1678266561093-324802646fb2?q=80",
-  },
-];
+// Initialize API
+const api = new Api("https://around-api.es.tripleten-services.com/v1/", {
+  Authorization: "1439adc7-0960-4dee-903b-22e0b673f7cc",
+});
 
+// Load user information
+api
+  .getUserInfo()
+  .then((userData) => {
+    if (userData) {
+      userInfo.setUserInfo({
+        name: userData.name,
+        job: userData.about,
+      });
+    } else {
+      console.warn("No user data received.");
+    }
+  })
+  .catch((error) => {
+    console.error("Error fetching user info:", error);
+  });
+
+// Create section for cards
+const cardsSection = new Section(
+  {
+    items: [],
+    renderer: (cardData) => {
+      const cardElement = createCard(cardData);
+      cardsSection.addItem(cardElement);
+    },
+  },
+  ".cards"
+);
+
+// Load cards from the server
+api
+  .getInitialCards()
+  .then((cards) => {
+    console.log("Cards received:", cards);
+    if (cards && Array.isArray(cards) && cards.length > 0) {
+      cards.forEach((cardData) => {
+        const cardElement = createCard(cardData);
+        cardsSection.addItem(cardElement);
+      });
+    } else {
+      console.warn("No cards available to display.");
+    }
+  })
+  .catch((error) => {
+    console.error("Error fetching initial cards:", error);
+  });
+
+// Initialize UserInfo instance
 const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   jobSelector: ".profile__description",
 });
 
-const cardsSection = new Section(
-  {
-    items: initialCards,
-    renderer: (cardData) => {
-      const card = createCard(cardData);
-      cardsSection.addItem(card);
-    },
-  },
-  ".cards"
-);
-cardsSection.renderItems();
-
+// Profile edit popup
 const profilePopup = new PopupWithForm(
   popupEditProfileSelector,
   (inputValues) => {
-    userInfo.setUserInfo({ name: inputValues.name, job: inputValues.about });
+    const newName = inputValues.name.trim();
+    const newAbout = inputValues.about.trim();
+
+    if (newName && newAbout) {
+      api
+        .updateUserInfo(newName, newAbout)
+        .then((updatedUserData) => {
+          if (updatedUserData) {
+            userInfo.setUserInfo({
+              name: updatedUserData.name,
+              job: updatedUserData.about,
+            });
+            profilePopup.close();
+          } else {
+            console.warn("User data update failed.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating user profile:", error);
+        });
+    } else {
+      console.warn("Invalid input: Name and About fields cannot be empty.");
+    }
   }
 );
 profilePopup.setEventListeners();
 
+// Add card popup
 const addCardPopup = new PopupWithForm(popupAddCardSelector, (inputValues) => {
-  const newCard = createCard({
-    name: inputValues.title,
-    link: inputValues.link,
-  });
-  cardsSection.addItem(newCard);
+  const newCardName = inputValues.title.trim();
+  const newCardLink = inputValues.link.trim();
+
+  if (newCardName && newCardLink) {
+    api
+      .addNewCard(newCardName, newCardLink)
+      .then((newCardData) => {
+        if (newCardData) {
+          const newCard = createCard(newCardData);
+          cardsSection.addItem(newCard);
+          addCardPopup.close();
+        } else {
+          console.warn("Failed to add new card.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding new card:", error);
+      });
+  } else {
+    console.warn("Invalid input: Name and Link fields cannot be empty.");
+  }
 });
 addCardPopup.setEventListeners();
 
+// Image popup
 const imagePopup = new PopupWithImage(popupImageSelector);
 imagePopup.setEventListeners();
 
+// Open profile edit popup with current user info
 editButton.addEventListener("click", () => {
   const userData = userInfo.getUserInfo();
   document.querySelector("#name").value = userData.name.trim();
@@ -95,10 +151,12 @@ editButton.addEventListener("click", () => {
   profilePopup.open();
 });
 
+// Open add card popup
 addButton.addEventListener("click", () => {
   addCardPopup.open();
 });
 
+// Handle image clicks
 document.querySelector(".cards").addEventListener("click", (event) => {
   if (event.target.classList.contains("card__image")) {
     const cardElement = event.target.closest(".card");
@@ -106,40 +164,20 @@ document.querySelector(".cards").addEventListener("click", (event) => {
     const cardName = cardElement.querySelector(
       ".card__description-text"
     ).textContent;
-
     imagePopup.open(cardImage.src, cardImage.alt, cardName);
   }
 });
 
+// Form validation
 const editProfileValidator = new FormValidator(editProfileForm, formConfig);
 editProfileValidator.enableValidation();
 
 const addCardValidator = new FormValidator(addCardForm, formConfig);
 addCardValidator.enableValidation();
 
+// Function to create a new card
 function createCard(data) {
+  console.log("Creating card for:", data.name);
   const card = new Card(data, "#card__template");
   return card.getCard();
 }
-
-const api = new Api("https://around-api.es.tripleten-services.com/v1/", {
-  Authorization: "1439adc7-0960-4dee-903b-22e0b673f7cc",
-});
-
-// Llamada para obtener la información del usuario
-api.getUserInfo().then((result) => {
-  if (result.success === false) {
-    console.error("Error al obtener la información del usuario:", result.error);
-  } else {
-    console.log("Información del usuario:", result);
-  }
-});
-
-// Llamada para obtener las tarjetas iniciales
-api.getInitialCards().then((result) => {
-  if (result.success === false) {
-    console.error("Error al obtener las tarjetas iniciales:", result.error);
-  } else {
-    console.log("Tarjetas iniciales:", result);
-  }
-});

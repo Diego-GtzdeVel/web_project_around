@@ -4,7 +4,6 @@ export default class Api {
     this.headers = headers;
   }
 
-  // Método para obtener la información del usuario
   getUserInfo() {
     return fetch(`${this.baseUrl}users/me`, {
       method: "GET",
@@ -13,15 +12,41 @@ export default class Api {
         ...this.headers,
       },
     })
-      .then((res) => res.json())
-      .catch((err) => ({
-        success: false,
-        error:
-          err.message || "Error desconocido al comunicarse con el servidor",
-      }));
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Error: ${res.status} ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .catch((err) => {
+        console.error("Error fetching user info:", err);
+        return null;
+      });
   }
 
-  // Método para obtener las tarjetas iniciales
+  updateUserInfo(name, about) {
+    return fetch(`${this.baseUrl}users/me`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...this.headers,
+      },
+      body: JSON.stringify({
+        name: name,
+        about: about,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Error: ${res.status} ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .catch((err) => {
+        console.error("Error updating user profile:", err);
+      });
+  }
+
   getInitialCards() {
     return fetch(`${this.baseUrl}cards/`, {
       method: "GET",
@@ -30,11 +55,32 @@ export default class Api {
         ...this.headers,
       },
     })
-      .then((res) => res.json())
-      .catch((err) => ({
-        success: false,
-        error:
-          err.message || "Error desconocido al comunicarse con el servidor",
-      }));
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Error: ${res.status} ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .catch((err) => {
+        console.error("Error fetching cards:", err);
+      });
+  }
+
+  addNewCard(name, link) {
+    return fetch(`${this.baseUrl}cards/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...this.headers,
+      },
+      body: JSON.stringify({
+        name: name,
+        link: link,
+      }),
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject(res.statusText)))
+      .catch((err) => {
+        console.error("Error adding new card:", err);
+      });
   }
 }
