@@ -7,14 +7,14 @@
     <meta name="author" content="Diego Gutierrez de Velasco Lujan" />
     <meta name="keywords" content="galeria" />
     <title>Around The US</title>
-    <link rel="stylesheet" href="./pages/index.css" />
+    <link rel="stylesheet" href="../pages/index.css" />
   </head>
   <body>
     <div class="page">
       <header class="header">
         <img
           class="header__logo"
-          src="./images/logo.svg"
+          src="../images/logo.svg"
           alt="Something's wrong"
         />
       </header>
@@ -23,11 +23,11 @@
           <div class="profile__avatar-container">
             <img
               class="profile__avatar"
-              src="./images/avatar.png"
+              src="../images/avatar.png"
               alt="Something's wrong"
             />
             <button class="profile__avatar-edit" type="button">
-              <img src="./images/AvatarEdit.png" alt="Edit Avatar" />
+              <img src="../images/AvatarEdit.png" alt="Edit Avatar" />
             </button>
           </div>
           <div class="profile__info">
@@ -35,17 +35,21 @@
             <p class="profile__description">Explorador</p>
           </div>
           <button class="profile__edit" type="button" name="edit">
-            <img src="./images/editbutton.png" alt="Edit Button" />
+            <img src="../images/editbutton.png" alt="Edit Button" />
           </button>
           <button class="profile__add" type="button" name="add">
-            <img src="./images/addbutton.png" alt="Add Button" />
+            <img src="../images/addbutton.png" alt="Add Button" />
           </button>
         </section>
         <section class="cards">
           <template id="card__template">
             <div class="card">
               <img class="card__image" src="" alt="" />
-              <img class="card__delete" src="./images/trash.svg" alt="Delete" />
+              <img
+                class="card__delete"
+                src="../images/trash.svg"
+                alt="Delete"
+              />
               <div class="card__description">
                 <input type="checkbox" class="card__description-checkbox" />
                 <label class="card__description-text" for="">
@@ -57,7 +61,7 @@
         </section>
         <section class="popup">
           <button class="popup__close" type="button" name="close">
-            <img src="./images/closeicon.png" alt="Close Button" />
+            <img src="../images/closeicon.png" alt="Close Button" />
           </button>
           <div class="popup__container">
             <h2 class="popup__title">Editar perfil</h2>
@@ -94,7 +98,7 @@
         </section>
         <section class="add-popup">
           <button class="popup__close" type="button" name="close">
-            <img src="./images/closeicon.png" alt="Close Button" />
+            <img src="../images/closeicon.png" alt="Close Button" />
           </button>
           <div class="add-popup__container">
             <h2 class="popup__title">Nuevo lugar</h2>
@@ -130,7 +134,7 @@
         <section id="image__popup">
           <div class="image-popup">
             <button class="image-popup__close">
-              <img src="./images/closeicon.png" alt="Close Button" />
+              <img src="../images/closeicon.png" alt="Close Button" />
             </button>
             <div class="image-popup__content">
               <img class="popup__image" alt="Full-size image" />
@@ -140,7 +144,7 @@
         </section>
         <section class="confirm-popup">
           <button class="confirm-popup__close" type="button" name="close">
-            <img src="./images/closeicon.png" alt="Close Button" />
+            <img src="../images/closeicon.png" alt="Close Button" />
           </button>
           <div class="confirm-popup__container">
             <h2 class="popup__title">¿Estás seguro/a?</h2>
@@ -149,7 +153,7 @@
         </section>
         <section class="avatar-popup">
           <button class="popup__close" type="button" name="close">
-            <img src="./images/closeicon.png" alt="Close Button" />
+            <img src="../images/closeicon.png" alt="Close Button" />
           </button>
           <div class="avatar-popup__container">
             <h2 class="popup__title">Cambiar foto de perfil</h2>
@@ -175,6 +179,6 @@
         <p class="footer__copyright">© 2024. Around The U.S.</p>
       </footer>
     </div>
-    <script type="module" src="./pages/index.js"></script>
+    <script type="module" src="../pages/index.js"></script>
   </body>
 </html>
