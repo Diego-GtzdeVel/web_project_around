@@ -3,9 +3,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 1280px;
-  height: 1280px;
-  position: absolute;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
   background: rgb(0, 0, 0, 0.5);
 }
 
@@ -21,20 +23,15 @@
   width: 430px;
   height: 330px;
   border-radius: 10px;
-  position: absolute;
-  top: 195px;
 }
 
-.add-popup__close {
+.popup__close {
   display: flex;
   background: rgba(0, 0, 0);
   border: 0;
   cursor: pointer;
   max-width: 40px;
   max-height: 40px;
-  position: absolute;
-  top: 146.72px;
-  right: 376.72px;
 }
 
 .add-popup__close:hover {

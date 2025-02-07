@@ -20,11 +20,16 @@
       </header>
       <main class="content">
         <section class="profile">
-          <img
-            class="profile__avatar"
-            src="./images/avatar.png"
-            alt="Something's wrong"
-          />
+          <div class="profile__avatar-container">
+            <img
+              class="profile__avatar"
+              src="./images/avatar.png"
+              alt="Something's wrong"
+            />
+            <button class="profile__avatar-edit" type="button">
+              <img src="./images/AvatarEdit.png" alt="Edit Avatar" />
+            </button>
+          </div>
           <div class="profile__info">
             <h1 class="profile__name">Jacques Cousteau</h1>
             <p class="profile__description">Explorador</p>
@@ -139,7 +144,30 @@
           </button>
           <div class="confirm-popup__container">
             <h2 class="popup__title">¿Estás seguro/a?</h2>
-            <button type="submit" class="confirm-popup__button">Si</button>
+            <button type="submit" class="popup__button">Si</button>
+          </div>
+        </section>
+        <section class="avatar-popup">
+          <button class="popup__close" type="button" name="close">
+            <img src="./images/closeicon.png" alt="Close Button" />
+          </button>
+          <div class="avatar-popup__container">
+            <h2 class="popup__title">Cambiar foto de perfil</h2>
+            <form class="form avatar-popup__form">
+              <fieldset class="form__fieldset">
+                <input
+                  required
+                  type="url"
+                  id="avatar"
+                  class="popup__input"
+                  placeholder="Enlace del avatar"
+                />
+                <span id="link-error" class="popup__error"
+                  >Por favor, rellena este campo.</span
+                >
+                <button type="submit" class="popup__button">Guardar</button>
+              </fieldset>
+            </form>
           </div>
         </section>
       </main>

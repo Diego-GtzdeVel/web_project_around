@@ -11,7 +11,7 @@
   background: rgb(0, 0, 0, 0.5);
 }
 
-.confirm-popup_opened {
+.popup_opened {
   display: flex;
 }
 
@@ -27,7 +27,7 @@
 
 .confirm-popup__close {
   display: flex;
-  background: rgba(0, 0, 0);
+  background: rgba(0, 0, 0, 0.5);
   border: 0;
   cursor: pointer;
   max-width: 40px;

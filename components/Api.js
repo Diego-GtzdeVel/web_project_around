@@ -4,6 +4,13 @@ export default class Api {
     this.headers = headers;
   }
 
+  _handleResponse(res) {
+    if (!res.ok) {
+      return Promise.reject(`Error: ${res.status} ${res.statusText}`);
+    }
+    return res.json();
+  }
+
   getUserInfo() {
     return fetch(`${this.baseUrl}users/me`, {
       method: "GET",
@@ -11,40 +18,7 @@ export default class Api {
         "Content-Type": "application/json",
         ...this.headers,
       },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Error: ${res.status} ${res.statusText}`);
-        }
-        return res.json();
-      })
-      .catch((err) => {
-        console.error("Error fetching user info:", err);
-        return null;
-      });
-  }
-
-  updateUserInfo(name, about) {
-    return fetch(`${this.baseUrl}users/me`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        ...this.headers,
-      },
-      body: JSON.stringify({
-        name: name,
-        about: about,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Error: ${res.status} ${res.statusText}`);
-        }
-        return res.json();
-      })
-      .catch((err) => {
-        console.error("Error updating user profile:", err);
-      });
+    }).then(this._handleResponse);
   }
 
   getInitialCards() {
@@ -54,16 +28,29 @@ export default class Api {
         "Content-Type": "application/json",
         ...this.headers,
       },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Error: ${res.status} ${res.statusText}`);
-        }
-        return res.json();
-      })
-      .catch((err) => {
-        console.error("Error fetching cards:", err);
-      });
+    }).then(this._handleResponse);
+  }
+
+  updateUserInfo(name, about) {
+    return fetch(`${this.baseUrl}users/me`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...this.headers,
+      },
+      body: JSON.stringify({ name, about }),
+    }).then(this._handleResponse);
+  }
+
+  updateUserAvatar(avatarUrl) {
+    return fetch(`${this.baseUrl}users/me/avatar`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...this.headers,
+      },
+      body: JSON.stringify({ avatar: avatarUrl }),
+    }).then(this._handleResponse);
   }
 
   addNewCard(name, link) {
@@ -73,14 +60,41 @@ export default class Api {
         "Content-Type": "application/json",
         ...this.headers,
       },
-      body: JSON.stringify({
-        name: name,
-        link: link,
-      }),
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res.statusText)))
-      .catch((err) => {
-        console.error("Error adding new card:", err);
-      });
+      body: JSON.stringify({ name, link }),
+    }).then(this._handleResponse);
+  }
+
+  deleteCard(cardId) {
+    return fetch(`${this.baseUrl}cards/${cardId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        ...this.headers,
+      },
+    }).then(this._handleResponse);
+  }
+
+  addLike(cardId) {
+    return fetch(`${this.baseUrl}cards/${cardId}/likes`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        ...this.headers,
+      },
+    }).then(this._handleResponse);
+  }
+
+  removeLike(cardId) {
+    return fetch(`${this.baseUrl}cards/${cardId}/likes`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        ...this.headers,
+      },
+    }).then(this._handleResponse);
+  }
+
+  getUserAndCards() {
+    return Promise.all([this.getUserInfo(), this.getInitialCards()]);
   }
 }

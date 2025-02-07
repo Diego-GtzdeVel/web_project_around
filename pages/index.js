@@ -11,11 +11,14 @@ const popupEditProfileSelector = ".popup";
 const popupAddCardSelector = ".add-popup";
 const popupImageSelector = ".image-popup";
 const popupConfirmSelector = ".confirm-popup";
+const popupAvatarSelector = ".avatar-popup";
 
 const editButton = document.querySelector(".profile__edit");
 const addButton = document.querySelector(".profile__add");
+const avatarEditButton = document.querySelector(".profile__avatar-edit");
 const editProfileForm = document.querySelector(".popup__form");
 const addCardForm = document.querySelector(".add-popup__form");
+const editAvatarForm = document.querySelector(".avatar-popup__form");
 
 const formConfig = {
   formSelector: ".form",
@@ -30,21 +33,8 @@ const api = new Api("https://around-api.es.tripleten-services.com/v1/", {
   Authorization: "1439adc7-0960-4dee-903b-22e0b673f7cc",
 });
 
-api
-  .getUserInfo()
-  .then((userData) => {
-    if (userData) {
-      userInfo.setUserInfo({
-        name: userData.name,
-        job: userData.about,
-      });
-    } else {
-      console.warn("No user data received.");
-    }
-  })
-  .catch((error) => {
-    console.error("Error fetching user info:", error);
-  });
+const confirmPopup = new PopupWithConfirmation(popupConfirmSelector);
+confirmPopup.setEventListeners();
 
 const cardsSection = new Section(
   {
@@ -57,96 +47,96 @@ const cardsSection = new Section(
   ".cards"
 );
 
+const userInfo = new UserInfo({
+  nameSelector: ".profile__name",
+  jobSelector: ".profile__description",
+  avatarSelector: ".profile__avatar",
+});
+
 api
-  .getInitialCards()
-  .then((cards) => {
-    console.log("Cards received:", cards);
-    if (cards && Array.isArray(cards) && cards.length > 0) {
+  .getUserAndCards()
+  .then(([userData, cards]) => {
+    if (userData) {
+      userInfo.setUserInfo({
+        name: userData.name,
+        job: userData.about,
+        avatar: userData.avatar,
+      });
+    }
+
+    if (Array.isArray(cards) && cards.length > 0) {
       cards.forEach((cardData) => {
         const cardElement = createCard(cardData);
         cardsSection.addItem(cardElement);
       });
     } else {
-      console.warn("No cards available to display.");
+      console.warn("No hay tarjetas disponibles.");
     }
   })
   .catch((error) => {
-    console.error("Error fetching initial cards:", error);
+    console.error("Error al obtener datos del usuario y tarjetas:", error);
   });
-
-const userInfo = new UserInfo({
-  nameSelector: ".profile__name",
-  jobSelector: ".profile__description",
-});
 
 const profilePopup = new PopupWithForm(
   popupEditProfileSelector,
   (inputValues) => {
-    const newName = inputValues.name.trim();
-    const newAbout = inputValues.about.trim();
-
-    if (newName && newAbout) {
-      api
-        .updateUserInfo(newName, newAbout)
-        .then((updatedUserData) => {
-          if (updatedUserData) {
-            userInfo.setUserInfo({
-              name: updatedUserData.name,
-              job: updatedUserData.about,
-            });
-            profilePopup.close();
-          } else {
-            console.warn("User data update failed.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error updating user profile:", error);
-        });
-    } else {
-      console.warn("Invalid input: Name and About fields cannot be empty.");
-    }
+    return api
+      .updateUserInfo(inputValues.name.trim(), inputValues.about.trim())
+      .then((updatedUserData) => {
+        if (updatedUserData) {
+          userInfo.setUserInfo({
+            name: updatedUserData.name,
+            job: updatedUserData.about,
+          });
+          profilePopup.close();
+        }
+      })
+      .catch((error) => {
+        console.error("Error al actualizar el perfil:", error);
+      })
+      .finally(() => profilePopup.restoreButtonText());
   }
 );
 profilePopup.setEventListeners();
 
-const addCardPopup = new PopupWithForm(popupAddCardSelector, (inputValues) => {
-  const newCardName = inputValues.title.trim();
-  const newCardLink = inputValues.link.trim();
-
-  if (newCardName && newCardLink) {
-    api
-      .addNewCard(newCardName, newCardLink)
-      .then((newCardData) => {
-        if (newCardData) {
-          const newCard = createCard(newCardData);
-          cardsSection.addItem(newCard);
-          addCardPopup.close();
-        } else {
-          console.warn("Failed to add new card.");
+const avatarEditPopup = new PopupWithForm(
+  popupAvatarSelector,
+  (inputValues) => {
+    return api
+      .updateUserAvatar(inputValues.avatar.trim())
+      .then((updatedUserData) => {
+        if (updatedUserData) {
+          userInfo.setUserInfo({ avatar: updatedUserData.avatar });
+          avatarEditPopup.close();
         }
       })
       .catch((error) => {
-        console.error("Error adding new card:", error);
-      });
-  } else {
-    console.warn("Invalid input: Name and Link fields cannot be empty.");
+        console.error("Error al actualizar el avatar:", error);
+      })
+      .finally(() => avatarEditPopup.restoreButtonText());
   }
+);
+avatarEditPopup.setEventListeners();
+
+const addCardPopup = new PopupWithForm(popupAddCardSelector, (inputValues) => {
+  return api
+    .addNewCard(inputValues.title.trim(), inputValues.link.trim())
+    .then((newCardData) => {
+      if (newCardData) {
+        const newCard = createCard(newCardData);
+        cardsSection.addItem(newCard);
+        addCardPopup.close();
+      }
+    })
+    .catch((error) => {
+      console.error("Error al agregar la tarjeta:", error);
+    })
+    .finally(() => addCardPopup.restoreButtonText());
 });
 addCardPopup.setEventListeners();
 
 const imagePopup = new PopupWithImage(popupImageSelector);
 imagePopup.setEventListeners();
-
-editButton.addEventListener("click", () => {
-  const userData = userInfo.getUserInfo();
-  document.querySelector("#name").value = userData.name.trim();
-  document.querySelector("#about").value = userData.job.trim();
-  profilePopup.open();
-});
-
-addButton.addEventListener("click", () => {
-  addCardPopup.open();
-});
 
 document.querySelector(".cards").addEventListener("click", (event) => {
   if (event.target.classList.contains("card__image")) {
@@ -159,14 +149,43 @@ document.querySelector(".cards").addEventListener("click", (event) => {
   }
 });
 
+editButton.addEventListener("click", () => {
+  const userData = userInfo.getUserInfo();
+  document.querySelector("#name").value = userData.name.trim();
+  document.querySelector("#about").value = userData.job.trim();
+  profilePopup.open();
+});
+
+addButton.addEventListener("click", () => {
+  addCardPopup.open();
+});
+
+avatarEditButton.addEventListener("click", () => {
+  avatarEditPopup.open();
+});
+
 const editProfileValidator = new FormValidator(editProfileForm, formConfig);
 editProfileValidator.enableValidation();
 
 const addCardValidator = new FormValidator(addCardForm, formConfig);
 addCardValidator.enableValidation();
 
+const editAvatarValidator = new FormValidator(editAvatarForm, formConfig);
+editAvatarValidator.enableValidation();
+
+const handleLikeButtonClick = (cardId, isLiked) => {
+  const likeApiCall = isLiked ? api.removeLike(cardId) : api.addLike(cardId);
+  likeApiCall
+    .then((updatedCardData) => {
+      document.querySelector(
+        `[data-id='${cardId}'] .card__like-checkbox`
+      ).checked = updatedCardData.isLiked;
+    })
+    .catch((error) => {
+      console.error("Error al modificar el estado de 'Me gusta':", error);
+    });
+};
+
 function createCard(data) {
-  console.log("Creating card for:", data.name);
-  const card = new Card(data, "#card__template");
-  return card.getCard();
+  return new Card(data, "#card__template", confirmPopup, api).getCard();
 }

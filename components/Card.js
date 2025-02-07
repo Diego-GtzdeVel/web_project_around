@@ -1,13 +1,14 @@
 export default class Card {
-  constructor(cardData, templateSelector) {
+  constructor(cardData, templateSelector, popupWithConfirmation, api) {
     this.cardData = cardData;
     this.template = document.querySelector(templateSelector);
+    this.popupWithConfirmation = popupWithConfirmation;
+    this.api = api;
     this.cardElement = this._createCard();
   }
 
   _createCardMarkup() {
     const cardClone = this.template.content.cloneNode(true);
-
     const cardImage = cardClone.querySelector(".card__image");
     const cardCheckbox = cardClone.querySelector(".card__description-checkbox");
     const cardLabel = cardClone.querySelector(".card__description-text");
@@ -16,31 +17,38 @@ export default class Card {
     );
     const cardDeleteButton = cardClone.querySelector(".card__delete");
 
-    cardImage.src = this.cardData.link;
-    cardImage.alt = this.cardData.name;
-    cardCheckbox.id = this.cardData.name;
-    cardLabel.setAttribute("for", this.cardData.name);
-    cardLabel.textContent = this.cardData.name;
+    const name = this.cardData.name || "Sin título";
+    const link = this.cardData.link || "https://via.placeholder.com/150";
+
+    cardImage.src = link;
+    cardImage.alt = name;
+    cardCheckbox.id = name;
+    cardLabel.setAttribute("for", name);
+    cardLabel.textContent = name;
     cardLabel.appendChild(cardLike);
 
-    cardDeleteButton.addEventListener("click", this._handleDelete);
+    const cardElement = cardClone.querySelector(".card");
 
-    return cardClone;
-  }
-
-  handleCardClick(callback) {
-    const cardImage = this.cardElement.querySelector(".card__image");
-    cardImage.addEventListener("click", () => {
-      callback(this.cardData.link, this.cardData.name);
+    cardDeleteButton.addEventListener("click", () => {
+      this.popupWithConfirmation.open(() => this._handleDelete());
     });
+
+    return cardElement;
   }
 
-  _handleDelete = (event) => {
-    const card = event.target.closest(".card");
-    if (card) {
-      card.remove();
-    }
-  };
+  _handleDelete() {
+    this.api
+      .deleteCard(this.cardData._id)
+      .then(() => {
+        if (this.cardElement) {
+          this.cardElement.remove();
+          this.cardElement = null;
+        }
+      })
+      .catch((error) => {
+        console.error("Error al eliminar la tarjeta:", error);
+      });
+  }
 
   getCard() {
     return this.cardElement;
