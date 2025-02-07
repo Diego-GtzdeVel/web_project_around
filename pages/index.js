@@ -3,12 +3,14 @@ import FormValidator from "../components/FormValidator.js";
 import Section from "../components/Section.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
+import PopupWithConfirmation from "../components/PopupWithConfirmation.js";
 import UserInfo from "../components/UserInfo.js";
 import Api from "../components/Api.js";
 
 const popupEditProfileSelector = ".popup";
 const popupAddCardSelector = ".add-popup";
 const popupImageSelector = ".image-popup";
+const popupConfirmSelector = ".confirm-popup";
 
 const editButton = document.querySelector(".profile__edit");
 const addButton = document.querySelector(".profile__add");
@@ -24,12 +26,10 @@ const formConfig = {
   errorClass: "popup__error_visible",
 };
 
-// Initialize API
 const api = new Api("https://around-api.es.tripleten-services.com/v1/", {
   Authorization: "1439adc7-0960-4dee-903b-22e0b673f7cc",
 });
 
-// Load user information
 api
   .getUserInfo()
   .then((userData) => {
@@ -46,7 +46,6 @@ api
     console.error("Error fetching user info:", error);
   });
 
-// Create section for cards
 const cardsSection = new Section(
   {
     items: [],
@@ -58,7 +57,6 @@ const cardsSection = new Section(
   ".cards"
 );
 
-// Load cards from the server
 api
   .getInitialCards()
   .then((cards) => {
@@ -76,13 +74,11 @@ api
     console.error("Error fetching initial cards:", error);
   });
 
-// Initialize UserInfo instance
 const userInfo = new UserInfo({
   nameSelector: ".profile__name",
   jobSelector: ".profile__description",
 });
 
-// Profile edit popup
 const profilePopup = new PopupWithForm(
   popupEditProfileSelector,
   (inputValues) => {
@@ -113,7 +109,6 @@ const profilePopup = new PopupWithForm(
 );
 profilePopup.setEventListeners();
 
-// Add card popup
 const addCardPopup = new PopupWithForm(popupAddCardSelector, (inputValues) => {
   const newCardName = inputValues.title.trim();
   const newCardLink = inputValues.link.trim();
@@ -139,11 +134,9 @@ const addCardPopup = new PopupWithForm(popupAddCardSelector, (inputValues) => {
 });
 addCardPopup.setEventListeners();
 
-// Image popup
 const imagePopup = new PopupWithImage(popupImageSelector);
 imagePopup.setEventListeners();
 
-// Open profile edit popup with current user info
 editButton.addEventListener("click", () => {
   const userData = userInfo.getUserInfo();
   document.querySelector("#name").value = userData.name.trim();
@@ -151,12 +144,10 @@ editButton.addEventListener("click", () => {
   profilePopup.open();
 });
 
-// Open add card popup
 addButton.addEventListener("click", () => {
   addCardPopup.open();
 });
 
-// Handle image clicks
 document.querySelector(".cards").addEventListener("click", (event) => {
   if (event.target.classList.contains("card__image")) {
     const cardElement = event.target.closest(".card");
@@ -168,14 +159,12 @@ document.querySelector(".cards").addEventListener("click", (event) => {
   }
 });
 
-// Form validation
 const editProfileValidator = new FormValidator(editProfileForm, formConfig);
 editProfileValidator.enableValidation();
 
 const addCardValidator = new FormValidator(addCardForm, formConfig);
 addCardValidator.enableValidation();
 
-// Function to create a new card
 function createCard(data) {
   console.log("Creating card for:", data.name);
   const card = new Card(data, "#card__template");
